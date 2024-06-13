@@ -30,32 +30,39 @@ export default function Content() {
   //Setting states to handle data
   const [toastStatus, setToastStatus] = useState(false); //False - Closed ; True - Open
   const [submissionData, setSubmissionData] = useState({});
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true); // True - the table data is loading
+  const [isLikedDataLoading, setIsLikedDataLoading] = useState(false); // True - the table data is loading
   const [likedData, setLikedData] = useState([]);
-  const [refetchAttempts, setRefetchAttempts] = useState(0);
+  const [refetchAttempts, setRefetchAttempts] = useState(0); // Quantity of refetch Attempts
   const [error, setError] = useState('');
 
+  //If the data is returned from server it will open the toast with that information
   const handleSubmission = (submittedData) => {
-    setSubmissionData(submittedData);
     if (submittedData.data) {
+      setSubmissionData(submittedData);
       setToastStatus(true);
     }
   };
 
+  //This function will save the liked toast and update the liked data state
   const handleLikeToast = () => {
+    setIsLikedDataLoading(true);
     saveLikedFormSubmission(submissionData)
       .then((res) => {
         setToastStatus(false);
         setIsLoading(true);
         getLikedToasts();
         setIsLoading(false);
+        setIsLikedDataLoading(false);
         return;
       })
       .catch((err) => {
         console.log(err);
+        setIsLikedDataLoading(false);
       });
   };
 
+  //This function will get the liked toast data and update the likedData state
   const getLikedToasts = () => {
     fetchLikedFormSubmissions()
       .then((res) => {
@@ -111,6 +118,15 @@ export default function Content() {
         {!isLoading && likedData.length > 0 && error === '' && (
           <DataTable likedData={likedData} />
         )}
+
+        {!isLoading && likedData.length == 0 && error === '' && (
+          <Typography
+            sx={{ fontSize: '22px', color: '#1976D2', fontWeight: 'bold' }}
+            variant="h6"
+          >
+            No data found at this time.
+          </Typography>
+        )}
       </Box>
       <Snackbar
         open={toastStatus}
@@ -139,14 +155,19 @@ export default function Content() {
                     {submissionData.data.email}
                   </Typography>
                 </Box>
-                <IconButton
-                  aria-label="like"
-                  color="inherit"
-                  size="small"
-                  onClick={handleLikeToast}
-                >
-                  <ThumbUp />
-                </IconButton>
+                {!isLikedDataLoading ? (
+                  <IconButton
+                    aria-label="like"
+                    color="inherit"
+                    size="small"
+                    onClick={handleLikeToast}
+                  >
+                    <ThumbUp />
+                  </IconButton>
+                ) : (
+                  <CircularProgress color="inherit" />
+                )}
+
                 <IconButton
                   aria-label="like"
                   color="inherit"
