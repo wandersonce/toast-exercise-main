@@ -136,6 +136,11 @@ export default function Content() {
         open={toastStatus}
         onClose={() => setToastStatus(false)}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+        sx={{
+          '& .MuiSnackbarContent-message': {
+            width: '100%',
+          },
+        }}
       >
         <SnackbarContent
           sx={{ background: '#1976D2', width: '100%' }}
@@ -150,7 +155,9 @@ export default function Content() {
                   gap: '10px',
                 }}
               >
-                <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                <Box
+                  sx={{ display: 'flex', flexDirection: 'column', flex: '1' }}
+                >
                   <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
                     {submissionData.data.firstName}{' '}
                     {submissionData.data.lastName}
