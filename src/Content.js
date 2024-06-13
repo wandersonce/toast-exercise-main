@@ -18,7 +18,7 @@ import DataTable from './components/DataTable';
 export default function Content() {
   //** WITH MORE TIME I WOULD DO SOME GLOBAL STATES TO HANDLE SOME STATUS HERE **//
   //** I would use React Context or Zustand **//
-  //** With Global states we could move some functions to an  **//
+  //** With Global states we could move some functions to an different file with helper functions and hooks **//
   //** Also would be nice to use Typescript to know what we are expecting from each returned data **//
 
   //Setting states to handle data
