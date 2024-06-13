@@ -20,10 +20,12 @@ import {
   TableRow,
 } from '@mui/material';
 import { Close, ThumbUp } from '@mui/icons-material';
+import DataTable from './components/DataTable';
 
 export default function Content() {
   //** WITH MORE TIME I WOULD DO SOME GLOBAL STATES TO HANDLE SOME STATUS HERE **//
   //** I would use React Context or Zustand **//
+  //** Also would be nice to use Typescript to know what we are expecting from each returned data **//
 
   //Setting states to handle data
   const [toastStatus, setToastStatus] = useState(false); //False - Closed ; True - Open
@@ -31,7 +33,7 @@ export default function Content() {
   const [isLoading, setIsLoading] = useState(true);
   const [likedData, setLikedData] = useState([]);
   const [refetchAttempts, setRefetchAttempts] = useState(0);
-  const [error, setError] = useState('as');
+  const [error, setError] = useState('');
 
   const handleSubmission = (submittedData) => {
     setSubmissionData(submittedData);
@@ -83,19 +85,19 @@ export default function Content() {
   };
 
   onMessage(handleSubmission);
+  //This will get the liked users just after render
   useEffect(() => {
     getLikedToasts();
   }, []);
 
-  console.log(isLoading, likedData.length, error);
   return (
     <>
       <Box sx={{ marginTop: 3 }}>
         <Typography variant="h4">Liked Form Submissions</Typography>
-        {!isLoading && error !== '' && likedData.length == 0 && (
+        {!isLoading && error !== '' && (
           <Typography variant="p">{error}</Typography>
         )}
-        {isLoading && error !== '' && (
+        {isLoading && error === '' && (
           <Box
             sx={{
               marginTop: '30px',
@@ -106,30 +108,8 @@ export default function Content() {
             <CircularProgress />
           </Box>
         )}
-        {!isLoading && likedData.length > 0 && error !== '' && (
-          <TableContainer
-            component={Paper}
-            sx={{ maxWidth: '650px', marginTop: '30px' }}
-          >
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell align="left">Name</TableCell>
-                  <TableCell align="left">Email</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {likedData.map((item) => (
-                  <TableRow key={item.id}>
-                    <TableCell>
-                      {item.data.firstName} {item.data.lastName}
-                    </TableCell>
-                    <TableCell>{item.data.email}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
+        {!isLoading && likedData.length > 0 && error === '' && (
+          <DataTable likedData={likedData} />
         )}
       </Box>
       <Snackbar
@@ -164,7 +144,6 @@ export default function Content() {
                   color="inherit"
                   size="small"
                   onClick={handleLikeToast}
-                  sx={{ marginLeft: 'auto' }}
                 >
                   <ThumbUp />
                 </IconButton>
@@ -173,7 +152,6 @@ export default function Content() {
                   color="inherit"
                   size="small"
                   onClick={() => setToastStatus(false)}
-                  sx={{ marginLeft: 'auto' }}
                 >
                   <Close />
                 </IconButton>
