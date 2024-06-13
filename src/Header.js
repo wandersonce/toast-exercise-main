@@ -11,8 +11,6 @@ import MenuIcon from '@mui/icons-material/Menu';
 import { createMockFormSubmission, onMessage } from './service/mockServer';
 
 export default function Header() {
-  // console.log(onMessage());
-
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
