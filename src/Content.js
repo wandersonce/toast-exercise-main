@@ -101,9 +101,12 @@ export default function Content() {
     <>
       <Box sx={{ marginTop: 3 }}>
         <Typography variant="h4">Liked Form Submissions</Typography>
+        {/* If not loading, with error - Show the error */}
         {!isLoading && error !== '' && (
           <Typography variant="p">{error}</Typography>
         )}
+
+        {/* If is loading without error - Show the loading spin */}
         {isLoading && error === '' && (
           <Box
             sx={{
@@ -115,10 +118,11 @@ export default function Content() {
             <CircularProgress />
           </Box>
         )}
+        {/* If not loading, has data and no error - Show the table */}
         {!isLoading && likedData.length > 0 && error === '' && (
           <DataTable likedData={likedData} />
         )}
-
+        {/* If not loading, no error and no data - Show the empty copy */}
         {!isLoading && likedData.length == 0 && error === '' && (
           <Typography
             sx={{ fontSize: '22px', color: '#1976D2', fontWeight: 'bold' }}
